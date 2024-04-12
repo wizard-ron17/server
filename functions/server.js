@@ -25,4 +25,5 @@ app.get('/api/account/:account', async (req, res) => {
 });
 
 // Export your Express app as a Netlify Function handler
+module.exports = app;
 module.exports.handler = serverless(app);
