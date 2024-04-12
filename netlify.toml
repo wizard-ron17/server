@@ -1,5 +1,6 @@
 [build]
   functions = "functions"
+  publish = "/opt/build/repo"
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
