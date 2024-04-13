@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/api/', (req, res) => {
-  res.send("Current Endpoints: 'api/accounts/<kadenaAccount>'")
+  res.send("Current Endpoints: 'api/account/<kadenaAccount>'")
 });
 
 router.get('/api/account/', (req, res) => {
