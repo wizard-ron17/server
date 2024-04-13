@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
   res.send('Server is running');
 });
 
-router.get('/api/account/:account', async (req, res) => {
+router.get('/api/account/k:account', async (req, res) => {
     try {
         const { account } = req.params;
         // Call your API to fetch account data
