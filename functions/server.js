@@ -6,17 +6,16 @@ const app = express();
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.send('Server is running');
+  res.send('Rons Server is running - Current Endpoints: /accounts/<kadenaAccount>');
+
+router.get('/account', (req, res) => {
+  res.send('Please provide a Kadena account address after /account/')
 });
 
 router.get('/api/account/:userAccount', async (req, res) => {
     try {
         const { userAccount } = req.params;
 
-        if (!userAccount) {
-        // Handle the case when no userAccount is provided
-        return res.send('Please provide a Kadena account address after /account/');
-    }
         // Call your API to fetch account data
         const response = await axios.get(`https://backend2.euclabs.net/kadena-indexer/v1/account/${userAccount}`);
         // Extract and send the response data back to the client
