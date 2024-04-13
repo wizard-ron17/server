@@ -22,6 +22,13 @@ router.get('/api/account/k:account', async (req, res) => {
     }
 });
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 app.use('/.netlify/functions/server/api', router);
 
 module.exports = app;
