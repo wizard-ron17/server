@@ -13,7 +13,7 @@ router.get('/api/account/k:account', async (req, res) => {
     try {
         const { account } = req.params;
         // Call your API to fetch account data
-        const response = await axios.get(`https://backend2.euclabs.net/kadena-indexer/v1/account/${account}`);
+        const response = await axios.get(`https://backend2.euclabs.net/kadena-indexer/v1/account/k:${account}`);
         // Extract and send the response data back to the client
         res.json(response.data);
     } catch (error) {
