@@ -6,7 +6,8 @@ const app = express();
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.send('Rons Server is running - Current Endpoints: /accounts/<kadenaAccount>');
+  res.send('Rons Server is running - Current Endpoints: /accounts/<kadenaAccount>')
+});
 
 router.get('/account/', (req, res) => {
   res.send('Please provide a Kadena account address after /account/')
