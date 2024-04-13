@@ -29,7 +29,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/.netlify/functions/server/api', router);
+app.use('/.netlify/functions/server/', router);
 
 module.exports = app;
 module.exports.handler = serverless(app);
