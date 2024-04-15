@@ -34,26 +34,36 @@
 </style>
 <script>
   // Function to type out text gradually
-  function typeWriter(text, i, cb) {
+  function typeWriter(text, i, element, cb) {
     if (i < text.length) {
-      document.getElementById("welcome").textContent += text.charAt(i);
+      element.textContent += text.charAt(i);
       i++;
-      setTimeout(() => typeWriter(text, i, cb), 50);
+      setTimeout(() => typeWriter(text, i, element, cb), 50);
     } else {
-      // Add the blinking cursor after the text is typed out
-      document.getElementById("welcome").insertAdjacentHTML('beforeend', '<span class="cursor"></span>');
       cb(); // Callback function
     }
   }
 
   // Initial function call
   function startTyping() {
-    const text = "> Welcome to Ron's Server";
-    typeWriter(text, 0, () => console.log("Text typing animation completed"));
+    const welcomeText = " > Welcome to Ron's Server!";
+    const endpointsText = " > Endpoints: /.netlify/functions/server/api/account/'a Kadena address'";
+    
+    const welcomeDiv = document.getElementById("welcome");
+    const endpointsDiv = document.getElementById("endpoints");
+
+    typeWriter(welcomeText, 0, welcomeDiv, () => {
+      // Add the blinking cursor after the welcome text is typed out
+      welcomeDiv.insertAdjacentHTML('beforeend', '<span class="cursor"></span>');
+      
+      // Type out the endpoints text
+      typeWriter(endpointsText, 0, endpointsDiv, () => console.log("Text typing animation completed"));
+    });
   }
 </script>
 </head>
 <body onload="startTyping()">
   <div id="welcome"></div>
+  <div id="endpoints"></div>
 </body>
 </html>
