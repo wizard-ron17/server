@@ -17,12 +17,19 @@ router.get('/api/account/', (req, res) => {
   res.send("Please provide a Kadena account address after '/account/'")
 });
 
-router.get('/api/account/:userAccount', async (req, res) => {
+router.get('/api/account/:userAccount/:assetId?', async (req, res) => {
     try {
-        const { userAccount } = req.params;
+        const { userAccount, assetId } = req.params;
 
-        // Call your API to fetch account data
-        const response = await axios.get(`https://backend2.euclabs.net/kadena-indexer/v1/account/${userAccount}`);
+        let apiUrl = `https://backend2.euclabs.net/kadena-indexer/v1/account/${userAccount}`;
+        
+        // If assetId is provided, append it to the API URL
+        if (assetId) {
+            apiUrl += `/${assetId}`;
+        }
+
+        // Call your API to fetch account data using userAccount and optionally assetId
+        const response = await axios.get(apiUrl);
         // Extract and send the response data back to the client
         res.json(response.data);
     } catch (error) {
