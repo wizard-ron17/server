@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&family=Orbitron:wght@400..900&display=swap')</style>
+<title>Welcome to Ron's Server</title>
+<style>
+  body {
+    background-color: black;
+    font-family: 'Kode Mono', Courier, monospace;
+    color: lime;
+    font-size: 24px;
+    text-align: left;
+    padding: 10px;
+  }
+  
+  /* Blinking cursor animation */
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  
+  /* Cursor style */
+  .cursor {
+    display: inline-block;
+    height: 18px; /* Adjusted height */
+    width: 2.5px;
+    margin-left: 3px;
+    background-color: lime;
+    animation: blink 1s infinite;
+  }
+</style>
+<script>
+  // Function to type out text gradually
+  function typeWriter(text, i, cb) {
+    if (i < text.length) {
+      document.getElementById("welcome").textContent += text.charAt(i);
+      i++;
+      setTimeout(() => typeWriter(text, i, cb), 50);
+    } else {
+      // Add the blinking cursor after the text is typed out
+      document.getElementById("welcome").insertAdjacentHTML('beforeend', '<span class="cursor"></span>');
+      cb(); // Callback function
+    }
+  }
+
+  // Initial function call
+  function startTyping() {
+    const text = "> Welcome to Ron's Server";
+    typeWriter(text, 0, () => console.log("Text typing animation completed"));
+  }
+</script>
+</head>
+<body onload="startTyping()">
+  <div id="welcome"></div>
+</body>
+</html>
