@@ -6,36 +6,47 @@ const app = express();
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.send(`Rons Server is running✅/nCurrent Endpoints: 'api/account/<kadenaAccount>'`)
+  res.send(`Ron's Server is running✅\nCurrent Endpoints: 'api/account/<kadenaAccount>', 'api/transfers-history/<kadenaAccount>'`);
 });
 
 router.get('/api/', (req, res) => {
-  res.send("Current Endpoints: 'api/account/<kadenaAccount>'")
+  res.send("Current Endpoints: 'api/account/<kadenaAccount>', 'api/transfers-history/<kadenaAccount>'");
 });
 
 router.get('/api/account/', (req, res) => {
-  res.send("Please provide a Kadena account address after '/account/'")
+  res.send("Please provide a Kadena account address after '/account/'");
 });
 
 router.get('/api/account/:userAccount/:assetId?', async (req, res) => {
-    try {
-        const { userAccount, assetId } = req.params;
+  try {
+    const { userAccount, assetId } = req.params;
 
-        let apiUrl = `https://backend2.euclabs.net/kadena-indexer/v1/account/${userAccount}`;
-        
-        // If assetId is provided, append it to the API URL
-        if (assetId) {
-            apiUrl += `/${assetId}`;
-        }
-
-        // Call your API to fetch account data using userAccount and optionally assetId
-        const response = await axios.get(apiUrl);
-        // Extract and send the response data back to the client
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error fetching API data:', error);
-        res.status(500).json({ error: 'Internal server error' });
+    let apiUrl = `https://backend2.euclabs.net/kadena-indexer/v1/account/${userAccount}`;
+    
+    if (assetId) {
+      apiUrl += `/${assetId}`;
     }
+
+    const response = await axios.get(apiUrl);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching API data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// New route for Kadena transaction history
+router.get('/api/transfers-history/:kadenaAccount', async (req, res) => {
+  try {
+    const { kadenaAccount } = req.params;
+    const apiUrl = `https://backend2.euclabs.net/kadena-indexer/v3/transfers-history/${kadenaAccount}`;
+
+    const response = await axios.get(apiUrl);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching transfers history:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.use((req, res, next) => {
