@@ -6,7 +6,7 @@ const app = express();
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.send(`Ron's Server is running✅\nCurrent Endpoints: 'api/account/<kadenaAccount>', 'api/transfers-history/<kadenaAccount>'`);
+  res.send(`Ron's Server is running✅ /n Current Endpoints: 'api/account/<kadenaAccount>', 'api/transfers-history/<kadenaAccount>'`);
 });
 
 router.get('/api/', (req, res) => {
