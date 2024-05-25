@@ -14,29 +14,12 @@
     text-align: left;
     padding: 10px;
   }
-  
-  /* Blinking cursor animation */
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-  
-  /* Cursor style */
-  .cursor {
-    display: inline-block;
-    height: 18px; /* Adjusted height */
-    width: 2.5px;
-    margin-left: 3px;
-    background-color: lime;
-    animation: blink 1s infinite;
-  }
 </style>
 <script>
   // Function to type out text gradually
   function typeWriter(text, i, element, cb) {
     if (i < text.length) {
-      element.textContent += text.charAt(i);
+      element.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
       i++;
       setTimeout(() => typeWriter(text, i, element, cb), 50);
     } else {
@@ -46,18 +29,21 @@
 
   // Initial function call
   function startTyping() {
-    const welcomeText = " > Welcome to Ron's Server!";
-    const endpointsText = " > Endpoints: /.netlify/functions/server/api/account/'a Kadena address'/'assetId'(*optional*)";
-    
+    const welcomeText = " > Welcome to Ron's Server!\n";
+    const endpointsTitle = " > Endpoints: '' = required query  **=optional query\n";
+    const endpointsText1 = " > /.netlify/functions/server/api/account/'k:account'/*assetId*\n";
+    const endpointsText2 = " > /.netlify/functions/server/api/transfers-history/'k:account'?*pageId=0&pageSize=10*";
+
     const welcomeDiv = document.getElementById("welcome");
     const endpointsDiv = document.getElementById("endpoints");
 
     typeWriter(welcomeText, 0, welcomeDiv, () => {
-      // Add the blinking cursor after the welcome text is typed out
-      welcomeDiv.insertAdjacentHTML('beforeend', '<span class="cursor"></span>');
-      
-      // Type out the endpoints text
-      typeWriter(endpointsText, 0, endpointsDiv, () => console.log("Text typing animation completed"));
+      // Type out the endpoints title and texts
+      typeWriter(endpointsTitle, 0, endpointsDiv, () => {
+        typeWriter(endpointsText1, 0, endpointsDiv, () => {
+          typeWriter(endpointsText2, 0, endpointsDiv, () => console.log("Text typing animation completed"));
+        });
+      });
     });
   }
 </script>
