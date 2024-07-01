@@ -50,7 +50,7 @@ router.get('/api/transfers-history/:kadenaAccount', async (req, res) => {
 });
 
 // New route to proxy the pools API
-router.get('/api/pools', async (req, res) => {
+router.get('/api/alph-pools', async (req, res) => {
   try {
     const apiUrl = 'https://indexer.alph.pro/api/pools';
     const response = await axios.get(apiUrl);
