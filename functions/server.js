@@ -49,6 +49,18 @@ router.get('/api/transfers-history/:kadenaAccount', async (req, res) => {
   }
 });
 
+// New route to proxy the pools API
+router.get('/api/pools', async (req, res) => {
+  try {
+    const apiUrl = 'https://indexer.alph.pro/api/pools';
+    const response = await axios.get(apiUrl);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching pools data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
