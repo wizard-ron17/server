@@ -17,6 +17,10 @@ router.get('/api/account/', (req, res) => {
   res.send("Please provide a Kadena account address after '/account/'");
 });
 
+router.get('/api/transfers-history/', (req, res) => {
+  res.send("Please provide a Kadena account address after '/account/'");
+});
+
 router.get('/api/account/:userAccount/:assetId?', async (req, res) => {
   try {
     const { userAccount, assetId } = req.params;
