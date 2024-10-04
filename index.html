@@ -1,55 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&family=Orbitron:wght@400..900&display=swap')</style>
-<title>Ron's Server</title>
-<style>
-  body {
-    background-color: black;
-    font-family: 'Kode Mono', Courier, monospace;
-    color: lime;
-    font-size: 24px;
-    text-align: left;
-    padding: 10px;
-  }
-</style>
-<script>
-  // Function to type out text gradually
-  function typeWriter(text, i, element, cb) {
-    if (i < text.length) {
-      element.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
-      i++;
-      setTimeout(() => typeWriter(text, i, element, cb), 50);
-    } else {
-      cb(); // Callback function
-    }
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ron's API Server</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  // Initial function call
-  function startTyping() {
-    const welcomeText = " > Welcome to Ron's Server!\n";
-    const endpointsTitle = " > Endpoints: '' = required query  ** = optional query\n";
-    const endpointsText1 = " > /.netlify/functions/server/api/account/'k:account'/*assetId*\n";
-    const endpointsText2 = " > /.netlify/functions/server/api/transfers-history/'k:account'?*pageId=0&pageSize=10*";
+        body {
+            background-color: #0c1015;
+            font-family: 'Kode Mono', monospace;
+            color: #00ff00;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    const welcomeDiv = document.getElementById("welcome");
-    const endpointsDiv = document.getElementById("endpoints");
+        .container {
+            background-color: rgba(2, 6, 12, 0.95);
+            border: 1px solid #1a2634;
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0, 255, 0, 0.1);
+        }
 
-    typeWriter(welcomeText, 0, welcomeDiv, () => {
-      // Type out the endpoints title and texts
-      typeWriter(endpointsTitle, 0, endpointsDiv, () => {
-        typeWriter(endpointsText1, 0, endpointsDiv, () => {
-          typeWriter(endpointsText2, 0, endpointsDiv, () => console.log("Text typing animation completed"));
-        });
-      });
-    });
-  }
-</script>
+        .title {
+            font-size: 28px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #1a2634;
+            padding-bottom: 15px;
+            color: #fff;
+        }
+
+        .endpoint {
+            margin: 30px 0;
+            padding: 25px;
+            background-color: rgba(26, 38, 52, 0.4);
+            border-radius: 8px;
+            border: 1px solid #1a2634;
+        }
+
+        .endpoint-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .endpoint-description {
+            color: #7f8ea3;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 10px;
+            background-color: rgba(26, 38, 52, 0.4);
+            border-radius: 4px;
+        }
+
+        .input-group {
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-label {
+            font-size: 12px;
+            color: #7f8ea3;
+        }
+
+        input {
+            background-color: rgba(12, 16, 21, 0.8);
+            border: 1px solid #1a2634;
+            color: #fff;
+            padding: 10px;
+            font-family: 'Kode Mono', monospace;
+            border-radius: 4px;
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #61d7ff;
+            box-shadow: 0 0 0 2px rgba(0, 255, 0, 0.1);
+        }
+
+        input[type="number"] {
+            min-width: 100px;
+        }
+
+        button {
+            background-color: #1a2634;
+            color: #fff;
+            border: 1px solid #61d7ff;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Kode Mono', monospace;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #61d7ff;
+            color: #0c1015;
+        }
+
+        .url-display {
+            word-break: break-all;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: rgba(12, 16, 21, 0.8);
+            border-radius: 4px;
+            border: 1px solid #1a2634;
+            display: none;
+        }
+
+        .url-display a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .url-display a:hover {
+            text-decoration: underline;
+        }
+
+        .endpoint-icon {
+            width: 24px;
+            height: 24px;
+            fill: #00ff00;
+        }
+    </style>
 </head>
-<body onload="startTyping()">
-  <div id="welcome"></div>
-  <div id="endpoints"></div>
+<body>
+    <div class="container">
+        <div class="title">
+            <span id="welcome"></span>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-title">
+                <svg class="endpoint-icon" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    <path fill="currentColor" d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+                </svg>
+                Account Balance Endpoint
+            </div>
+            <div class="endpoint-description">
+                Retrieve account balance for all tokens, or optionally specify an asset ID/namespace to get a specific token balance for the account.
+            </div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <span class="input-label">Wallet Address (required)</span>
+                    <input type="text" id="accountInput1" placeholder="account" />
+                </div>
+                <div class="input-wrapper">
+                    <span class="input-label">Asset ID (optional)</span>
+                    <input type="text" id="assetId" placeholder="Asset ID" />
+                </div>
+            </div>
+            <button onclick="generateUrl(1)">Generate URL</button>
+            <div id="url1" class="url-display"></div>
+        </div>
+
+        <div class="endpoint">
+            <div class="endpoint-title">
+                <svg class="endpoint-icon" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                    <path fill="currentColor" d="M7 12h2v5H7zm4-7h2v12h-2zm4 4h2v8h-2z"/>
+                </svg>
+                Transfers History Endpoint
+            </div>
+            <div class="endpoint-description">
+                Fetch transfer history for a specific account with pagination support. 
+                Use Page ID to navigate through results and Page Size to control the number of records per page.
+                Results are sequential, so Page ID 0 and Page Size 10 will loead the 10 most recent transfers, but Page ID 1 and Page Size 10 will load the next 10 transfers.
+            </div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <span class="input-label">Wallet Address (required)</span>
+                    <input type="text" id="accountInput2" placeholder="account" />
+                </div>
+                <div class="input-wrapper">
+                    <span class="input-label">Page ID (optional, default: 0)</span>
+                    <input type="number" id="pageId" placeholder="0" value="0" min="0" />
+                </div>
+                <div class="input-wrapper">
+                    <span class="input-label">Results per page (optional, default: 10, less than 500)</span>
+                    <input type="number" id="pageSize" placeholder="10" value="10" min="1" max="100" />
+                </div>
+            </div>
+            <button onclick="generateUrl(2)">Generate URL</button>
+            <div id="url2" class="url-display"></div>
+        </div>
+    </div>
+
+    <script>
+        // Type writer effect for welcome message
+        function typeWriter(text, element, speed = 50) {
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Generate URLs based on input
+        function generateUrl(endpoint) {
+            const baseUrl = 'https://rons-server.netlify.app/.netlify/functions/server/api/';
+            let url = '';
+            let urlDisplay = '';
+
+            if (endpoint === 1) {
+                const account = document.getElementById('accountInput1').value;
+                const assetId = document.getElementById('assetId').value;
+                url = `${baseUrl}account/${account}${assetId ? '/' + assetId : ''}`;
+                urlDisplay = document.getElementById('url1');
+            } else {
+                const account = document.getElementById('accountInput2').value;
+                const pageId = document.getElementById('pageId').value;
+                const pageSize = document.getElementById('pageSize').value;
+                url = `${baseUrl}transfers-history/${account}?pageId=${pageId}&pageSize=${pageSize}`;
+                urlDisplay = document.getElementById('url2');
+            }
+
+            urlDisplay.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
+            urlDisplay.style.display = 'block';
+        }
+
+        // Start typing welcome message when page loads
+        window.onload = function() {
+            const welcomeElement = document.getElementById('welcome');
+            typeWriter("Welcome to Ron's API Server", welcomeElement);
+        };
+    </script>
 </body>
 </html>
