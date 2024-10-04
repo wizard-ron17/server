@@ -6,7 +6,7 @@ const app = express();
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.send(`Ron's Server is running✅ /n Current Endpoints: 'api/account/<kadenaAccount>', 'api/transfers-history/<kadenaAccount>'`);
+  res.send(`Ron's Server is running✅ \n Current Endpoints: 'api/account/<kadenaAccount>', 'api/transfers-history/<kadenaAccount>', 'api/txn/<requestKey>'`);
 });
 
 router.get('/api/', (req, res) => {
@@ -18,9 +18,16 @@ router.get('/api/account/', (req, res) => {
 });
 
 router.get('/api/transfers-history/', (req, res) => {
-  res.send("Please provide a Kadena account address after '/account/'");
+  res.send("Please provide a Kadena account address after '/transfers-history/'");
 });
 
+router.get('/api/txn/', (req, res) => {
+  res.send("Please provide a Kadena txn request key after '/txn/'");
+});
+
+// Endpoints
+
+// New route for Kadena account balance
 router.get('/api/account/:userAccount/:assetId?', async (req, res) => {
   try {
     const { userAccount, assetId } = req.params;
@@ -39,7 +46,7 @@ router.get('/api/account/:userAccount/:assetId?', async (req, res) => {
   }
 });
 
-// New route for Kadena transaction history
+// New route for Kadena account transaction history
 router.get('/api/transfers-history/:kadenaAccount', async (req, res) => {
   try {
     const { kadenaAccount } = req.params;
@@ -53,7 +60,21 @@ router.get('/api/transfers-history/:kadenaAccount', async (req, res) => {
   }
 });
 
-// New route to proxy the pools API
+// New route for Kadena txn details
+router.get('/api/txn/:requestKey', async (req, res) => {
+  try {
+    const { requestKey } = req.params;
+    const apiUrl = `https://backend2.euclabs.net/kadena-indexer/v2/tx-details/${requestKey}`;
+
+    const response = await axios.get(apiUrl);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching txn details:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// New route for alph.pro pools
 router.get('/api/alph-pools', async (req, res) => {
   try {
     const apiUrl = 'https://indexer.alph.pro/api/pools';
