@@ -11,6 +11,7 @@ const limiter = rateLimit({
 });
 
 const app = express();
+app.set('trust proxy', true); // Trust the first proxy
 const router = express.Router();
 
 // Middleware to log the full referer URL (including page path)
