@@ -13,11 +13,19 @@ const limiter = rateLimit({
 const app = express();
 const router = express.Router();
 
-// Middleware to log the domain (Referer or Origin)
+// Middleware to log the full referer URL (including page path)
 app.use((req, res, next) => {
   const referer = req.get('Referer');
   const origin = req.get('Origin');
-  console.log('Request received from domain: ', referer || origin || 'Direct access (No origin or referer)');
+
+  if (referer) {
+    console.log('Request received from URL: ', referer); // Logs full referer URL including page path
+  } else if (origin) {
+    console.log('Request received from domain: ', origin); // Logs only the domain if no referer is available
+  } else {
+    console.log('Request received from: Direct access (No referer or origin)');
+  }
+  
   next();
 });
 
