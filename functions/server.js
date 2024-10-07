@@ -1,14 +1,14 @@
-{/* const express = require('express');
+const express = require('express');
 const serverless = require('serverless-http');
 const axios = require('axios');
 const rateLimit = require('express-rate-limit');
 
-// Rate limiting: 1 request per minute per IP
+// Rate limiting: 1 request per minute per URL
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 1, // limit each IP to 1 request per windowMs
-  message: 'Too many requests, please try again after a minute.',
-  keyGenerator: (req, res) => req.ip, // Ensure the IP is derived correctly
+  max: 1, // limit each URL to 1 request per windowMs
+  message: 'Too many requests for this URL, please try again after a minute.',
+  keyGenerator: (req, res) => req.originalUrl, // Limit by the full request URL
 });
 
 const app = express();
@@ -52,8 +52,8 @@ router.get('/api/txn/', (req, res) => {
   res.send("Please provide a Kadena txn request key after '/txn/'");
 });
 
-// Endpoints
-router.get('/api/account/:userAccount/:assetId?', async (req, res) => {
+// Endpoints with URL-based rate limiting
+router.get('/api/account/:userAccount/:assetId?', limiter, async (req, res) => {
   try {
     const { userAccount, assetId } = req.params;
     let apiUrl = `https://backend2.euclabs.net/kadena-indexer/v1/account/${userAccount}`;
@@ -70,7 +70,7 @@ router.get('/api/account/:userAccount/:assetId?', async (req, res) => {
   }
 });
 
-router.get('/api/transfers-history/:kadenaAccount', async (req, res) => {
+router.get('/api/transfers-history/:kadenaAccount', limiter, async (req, res) => {
   try {
     const { kadenaAccount } = req.params;
     const apiUrl = `https://backend2.euclabs.net/kadena-indexer/v3/transfers-history/${kadenaAccount}`;
@@ -83,7 +83,7 @@ router.get('/api/transfers-history/:kadenaAccount', async (req, res) => {
   }
 });
 
-router.get('/api/txn/:requestKey', async (req, res) => {
+router.get('/api/txn/:requestKey', limiter, async (req, res) => {
   try {
     const { requestKey } = req.params;
     const apiUrl = `https://backend2.euclabs.net/kadena-indexer/v2/tx-details/${requestKey}`;
@@ -116,7 +116,7 @@ app.use((req, res, next) => {
 });
 
 // Apply rate limiting to all routes
-app.use('/.netlify/functions/server/', limiter, router);
+app.use('/.netlify/functions/server/', router);
 
 module.exports = app;
-module.exports.handler = serverless(app); */}
+module.exports.handler = serverless(app);
