@@ -13,6 +13,7 @@
     "express": "^4.19.2",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "express-rate-limit": "^7.4.1" // Add the version number you prefer
   }
 }
