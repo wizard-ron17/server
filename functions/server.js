@@ -19,6 +19,7 @@ const router = express.Router();
 app.use((req, res, next) => {
   const referer = req.get('Referer');
   const origin = req.get('Origin');
+  console.log('IP Address:', req.ip);
 
   if (referer) {
     console.log('Request received from URL: ', referer); // Logs full referer URL including page path
