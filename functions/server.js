@@ -3,18 +3,23 @@ const serverless = require('serverless-http');
 const axios = require('axios');
 const rateLimit = require('express-rate-limit');
 
+// Rate limiting: 1 request per minute per IP
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 1, // limit each IP to 1 request per windowMs
+  message: 'Too many requests, please try again after a minute.',
+});
+
 const app = express();
 const router = express.Router();
 
-// Set rate limiting: 1 request per minute per IP
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 1, // Limit each IP to 1 request per `windowMs`
-  message: 'Too many requests from this IP, please try again after a minute'
+// Middleware to log the domain (Referer or Origin)
+app.use((req, res, next) => {
+  const referer = req.get('Referer');
+  const origin = req.get('Origin');
+  console.log('Request received from domain: ', referer || origin || 'Direct access (No origin or referer)');
+  next();
 });
-
-// Apply rate limiting to all API routes
-app.use('/api/', limiter);
 
 router.get('/', (req, res) => {
   res.send(`Ron's Server is running✅ \n Current Endpoints: 'api/account/<kadenaAccount>', 'api/transfers-history/<kadenaAccount>', 'api/txn/<requestKey>'`);
@@ -37,12 +42,9 @@ router.get('/api/txn/', (req, res) => {
 });
 
 // Endpoints
-
-// New route for Kadena account balance
 router.get('/api/account/:userAccount/:assetId?', async (req, res) => {
   try {
     const { userAccount, assetId } = req.params;
-
     let apiUrl = `https://backend2.euclabs.net/kadena-indexer/v1/account/${userAccount}`;
     
     if (assetId) {
@@ -57,7 +59,6 @@ router.get('/api/account/:userAccount/:assetId?', async (req, res) => {
   }
 });
 
-// New route for Kadena account transaction history
 router.get('/api/transfers-history/:kadenaAccount', async (req, res) => {
   try {
     const { kadenaAccount } = req.params;
@@ -71,7 +72,6 @@ router.get('/api/transfers-history/:kadenaAccount', async (req, res) => {
   }
 });
 
-// New route for Kadena txn details
 router.get('/api/txn/:requestKey', async (req, res) => {
   try {
     const { requestKey } = req.params;
@@ -85,7 +85,6 @@ router.get('/api/txn/:requestKey', async (req, res) => {
   }
 });
 
-// New route for alph.pro pools
 router.get('/api/alph-pools', async (req, res) => {
   try {
     const apiUrl = 'https://indexer.alph.pro/api/pools';
@@ -97,6 +96,7 @@ router.get('/api/alph-pools', async (req, res) => {
   }
 });
 
+// CORS middleware
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -104,7 +104,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/.netlify/functions/server/', router);
+// Apply rate limiting to all routes
+app.use('/.netlify/functions/server/', limiter, router);
 
 module.exports = app;
 module.exports.handler = serverless(app);
