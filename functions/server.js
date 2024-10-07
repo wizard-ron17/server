@@ -8,10 +8,11 @@ const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 1, // limit each IP to 1 request per windowMs
   message: 'Too many requests, please try again after a minute.',
+  keyGenerator: (req, res) => req.ip, // Ensure the IP is derived correctly
 });
 
 const app = express();
-app.set('trust proxy', true); // Trust the first proxy
+app.set('trust proxy', 'first'); // Trust the first proxy
 const router = express.Router();
 
 // Middleware to log the full referer URL (including page path)
