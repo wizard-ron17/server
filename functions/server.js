@@ -1,9 +1,20 @@
 const express = require('express');
 const serverless = require('serverless-http');
 const axios = require('axios');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const router = express.Router();
+
+// Set rate limiting: 1 request per minute per IP
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 1, // Limit each IP to 1 request per `windowMs`
+  message: 'Too many requests from this IP, please try again after a minute'
+});
+
+// Apply rate limiting to all API routes
+app.use('/api/', limiter);
 
 router.get('/', (req, res) => {
   res.send(`Ron's Server is running✅ \n Current Endpoints: 'api/account/<kadenaAccount>', 'api/transfers-history/<kadenaAccount>', 'api/txn/<requestKey>'`);
