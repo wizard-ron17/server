@@ -1,4 +1,4 @@
-/* const express = require('express');
+const express = require('express');
 const serverless = require('serverless-http');
 const axios = require('axios');
 const rateLimit = require('express-rate-limit');
@@ -119,4 +119,4 @@ app.use((req, res, next) => {
 app.use('/.netlify/functions/server/', router);
 
 module.exports = app;
-module.exports.handler = serverless(app); */
+module.exports.handler = serverless(app);
