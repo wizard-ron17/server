@@ -6,7 +6,7 @@ const rateLimit = require('express-rate-limit');
 // Rate limiting: 1 request per minute per URL
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 5, // limit each URL to 1 request per windowMs
+  max: 10, // limit each URL to 1 request per windowMs
   message: 'Too many requests for this URL, please try again after a minute.',
   keyGenerator: (req, res) => req.originalUrl, // Limit by the full request URL
 });
