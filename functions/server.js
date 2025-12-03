@@ -110,7 +110,7 @@ router.get('/api/alph-pools', async (req, res) => {
 router.get('/api/historical-trades/aura', limiter, async (req, res) => {
   try {
     const { ticker, start_time } = req.params;
-    const apiUrl = `https://api.elexium.finance/coingecko/historical_trades?ticker=tgx7VNFoP9DJiFMFgXXtafQZkUvyEdDHT9ryamHJYrjq_ywWQo64HBSMXcv3XBLrm8WjY2Co43BpYJPB3YoSDd4xX&start_time=1753909691000`;
+    const apiUrl = `https://api.elexium.finance/coingecko/historical_trades?ticker=tgx7VNFoP9DJiFMFgXXtafQZkUvyEdDHT9ryamHJYrjq_ywWQo64HBSMXcv3XBLrm8WjY2Co43BpYJPB3YoSDd4xX&start_time=1753990195898`;
 
     const response = await axios.get(apiUrl);
     res.json(response.data);
