@@ -146,6 +146,19 @@ router.get('/api/historical-trades/exy', limiter, async (req, res) => {
   }
 });
 
+router.get('/api/historical-trades/nutty', limiter, async (req, res) => {
+  try {
+    const { ticker, start_time } = req.params;
+    const apiUrl = `https://api.elexium.finance/coingecko/historical_trades?ticker=tgx7VNFoP9DJiFMFgXXtafQZkUvyEdDHT9ryamHJYrjq_vAvrGnhguy8X3Njmd8ENPShxyEJhiHJcu28fw8Tnk3rP&start_time=1733592676515`;
+
+    const response = await axios.get(apiUrl);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching historical trades data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // CORS middleware
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
