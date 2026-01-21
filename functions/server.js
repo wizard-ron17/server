@@ -123,7 +123,7 @@ router.get('/api/historical-trades/aura', limiter, async (req, res) => {
 router.get('/api/historical-trades/abx', limiter, async (req, res) => {
   try {
     const { ticker, start_time } = req.params;
-    const apiUrl = `https://api.elexium.finance/coingecko/historical_trades?ticker=258k9T6WqezTLdfGvHixXzK1yLATeSPuyhtcxzQ3V2pqV&start_time=1731471405000`;
+    const apiUrl = `https://api.elexium.finance/coingecko/historical_trades?ticker=tgx7VNFoP9DJiFMFgXXtafQZkUvyEdDHT9ryamHJYrjq_258k9T6WqezTLdfGvHixXzK1yLATeSPuyhtcxzQ3V2pqV&start_time=1731471405000`;
 
     const response = await axios.get(apiUrl);
     res.json(response.data);
