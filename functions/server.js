@@ -159,6 +159,62 @@ router.get('/api/historical-trades/nutty', limiter, async (req, res) => {
   }
 });
 
+router.get('/api/esp32/prices', async (req, res) => {
+  try {
+    // Fetch all prices concurrently
+    const [btcRes, alphRes, auraRes, exyRes, abxRes, xagRes] = await Promise.all([
+      axios.get('https://api.coinbase.com/v2/exchange-rates?currency=BTC'),
+      axios.get('https://api.coinpaprika.com/v1/coins/alph-alephium/ohlcv/today'),
+      axios.get('https://rons-server.netlify.app/.netlify/functions/server/api/historical-trades/aura'),
+      axios.get('https://rons-server.netlify.app/.netlify/functions/server/api/historical-trades/exy'),
+      axios.get('https://rons-server.netlify.app/.netlify/functions/server/api/historical-trades/abx'),
+      axios.get('https://api.gold-api.com/price/XAG')
+    ]);
+
+    // Extract prices
+    const btcPrice = btcRes.data.data.rates.USD;
+    const alphPrice = alphRes.data[0].close;
+    
+    // Get last trade price from arrays
+    const auraPrice = auraRes.data[auraRes.data.length - 1].price;
+    const exyPrice = exyRes.data[exyRes.data.length - 1].price;
+    const abxPrice = abxRes.data[abxRes.data.length - 1].price;
+    
+    const xagPrice = xagRes.data.price;
+
+    // Return consolidated response
+    res.json({
+      btc: {
+        price: parseFloat(btcPrice).toFixed(2),
+        unit: "USD"
+      },
+      alph: {
+        price: alphPrice.toFixed(4),
+        unit: "USD"
+      },
+      aura: {
+        price: auraPrice.toFixed(4),
+        unit: "ALPH"
+      },
+      exy: {
+        price: exyPrice.toFixed(4),
+        unit: "EX"
+      },
+      abx: {
+        price: abxPrice.toFixed(4),
+        unit: "ALPH"
+      },
+      xag: {
+        price: xagPrice.toFixed(2),
+        unit: "USD"
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching ESP32 prices:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // CORS middleware
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
